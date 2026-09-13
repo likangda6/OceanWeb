@@ -1,0 +1,32 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": "vite",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "installCommand": "npm install",
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "http://47.119.190.81:8088/api/:path*"
+    },
+    {
+      "source": "/ai/:path*",
+      "destination": "http://47.119.190.81:8088/ai/:path*"
+    },
+    {
+      "source": "/images/:path*",
+      "destination": "http://47.119.190.81/images/:path*"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,47 @@
+# 编译输出
+target/
+*.class
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# 前端依赖与构建
+frontend/node_modules/
+frontend/dist/
+
+# 构建产物（每次构建都会变化，不应提交）
+src/main/resources/static/vue/
+
+# 大文件（数据库导出、文档等）
+sql/oceanweb.sql
+*.docx
+docs/
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+logs/
+
+# 临时文件
+*.tmp
+*.bak
+
+# 敏感配置文件（含 API Key、数据库密码等，不可提交）
+application-prod.yml
+application-prod*.yml
+src/main/resources/application-local.yml
+src/main/resources/application.yml
+.env
+.env.*
+
+# 服务器部署文件
+deploy/
+nginx/
+docker-compose*.yml
+Dockerfile
+.dockerignore

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.library.mapper.VideoMapper">
+
+    <resultMap id="videoResultMap" type="com.library.common.domain.entity.ScienceVideo">
+        <id property="id" column="id"/>
+        <result property="title" column="title"/>
+        <result property="description" column="description"/>
+        <result property="videoId" column="video_id"/>
+        <result property="coverUrl" column="cover_url"/>
+        <result property="duration" column="duration"/>
+        <result property="category" column="category"/>
+        <result property="status" column="status"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <sql id="baseColumns">id, title, description, video_id, cover_url, duration, category, status, created_at, updated_at</sql>
+
+    <!-- 前台分页查询（只查 status=1） -->
+    <select id="selectPublicPage" resultMap="videoResultMap">
+        SELECT <include refid="baseColumns"/>
+        FROM science_video
+        WHERE status = 1
+        <if test="category != null and category != ''">
+            AND category = #{category}
+        </if>
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 管理后台分页查询（查所有状态，支持标题模糊搜索） -->
+    <select id="selectAdminPage" resultMap="videoResultMap">
+        SELECT <include refid="baseColumns"/>
+        FROM science_video
+        <where>
+            <if test="title != null and title != ''">
+                AND title LIKE CONCAT('%', #{title}, '%')
+            </if>
+            <if test="category != null and category != ''">
+                AND category = #{category}
+            </if>
+        </where>
+        ORDER BY created_at DESC
+    </select>
+
+    <select id="findById" resultMap="videoResultMap">
+        SELECT <include refid="baseColumns"/> FROM science_video WHERE id = #{id}
+    </select>
+
+    <select id="findByVideoId" resultMap="videoResultMap">
+        SELECT <include refid="baseColumns"/> FROM science_video WHERE video_id = #{videoId}
+    </select>
+
+    <insert id="insertVideo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO science_video (title, description, video_id, cover_url, duration, category, status)
+        VALUES (#{title}, #{description}, #{videoId}, #{coverUrl}, #{duration}, #{category},
+                <choose>
+                    <when test="status != null">#{status}</when>
+                    <otherwise>1</otherwise>
+                </choose>)
+    </insert>
+
+    <update id="updateVideo">
+        UPDATE science_video
+        <set>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="category != null">category = #{category},</if>
+            <if test="status != null">status = #{status},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateCoverAndDuration">
+        UPDATE science_video SET cover_url = #{coverUrl}, duration = #{duration} WHERE id = #{id}
+    </update>
+
+    <delete id="deleteVideo">
+        DELETE FROM science_video WHERE id = #{id}
+    </delete>
+
+    <select id="selectAll" resultMap="videoResultMap">
+        SELECT <include refid="baseColumns"/> FROM science_video
+    </select>
+
+</mapper>

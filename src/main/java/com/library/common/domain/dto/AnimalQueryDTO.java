@@ -1,0 +1,14 @@
+package com.library.common.domain.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class AnimalQueryDTO {
+    private String animalClass;
+    private String order;
+    private String family;
+}

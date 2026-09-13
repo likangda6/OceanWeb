@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.library.mapper.SpeciesStatisticsMapper">
+
+    <!-- 统计所有物种数据 -->
+    <select id="countAllStatistics" resultType="com.library.common.domain.dto.SpeciesStatisticsDTO">
+        SELECT
+            (SELECT COUNT(DISTINCT class) FROM (
+                                                   SELECT fishClass AS class FROM fish_species
+                                                   UNION SELECT fishClass FROM whale_species
+                                                   UNION SELECT fishClass FROM invertebrate
+                                               ) AS all_classes) AS classCount,
+
+            (SELECT COUNT(DISTINCT `order`) FROM (
+                                                     SELECT `order` FROM fish_species
+                                                     UNION SELECT `order` FROM whale_species
+                                                     UNION SELECT `order` FROM invertebrate
+                                                 ) AS all_orders) AS orderCount,
+
+            (SELECT COUNT(DISTINCT family) FROM (
+                                                    SELECT family FROM fish_species
+                                                    UNION SELECT family FROM whale_species
+                                                    UNION SELECT family FROM invertebrate
+                                                ) AS all_families) AS familyCount,
+
+            (SELECT COUNT(*) FROM fish_species) +
+            (SELECT COUNT(*) FROM whale_species) +
+            (SELECT COUNT(*) FROM invertebrate) AS speciesCount
+    </select>
+
+</mapper>

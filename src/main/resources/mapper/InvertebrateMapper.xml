@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.library.mapper.InvertebrateMapper">
+    <select id="getInvertebrateByName" resultType="com.library.common.domain.entity.Invertebrate">
+        SELECT * FROM invertebrate WHERE name = #{name}
+    </select>
+
+    <resultMap id="AnimalMap" type="com.library.common.domain.entity.Animal">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="animalClass" column="fishClass"/>
+        <result property="order" column="order"/>
+        <result property="family" column="family"/>
+        <result property="description" column="description"/>
+        <result property="imageUrl" column="image_url"/>
+    </resultMap>
+
+
+    <select id="findByCriteria" resultMap="AnimalMap">
+        SELECT id, name, fishClass, `order`, family, description, image_url
+        FROM invertebrate
+        <where>
+            <if test="animalClass != null and animalClass != ''">
+                AND fishClass = #{animalClass}
+            </if>
+            <if test="order != null and order != ''">
+                AND `order` = #{order}
+            </if>
+            <if test="family != null and family != ''">
+                AND family = #{family}
+            </if>
+        </where>
+    </select>
+
+    <insert id="insertInvertebrate" parameterType="com.library.common.domain.entity.Invertebrate" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO invertebrate (name, fishClass, `order`, family, description, image_url)
+        VALUES (#{name}, #{fishClass}, #{order}, #{family}, #{description}, #{imageUrl})
+    </insert>
+
+    <update id="updateInvertebrate" parameterType="com.library.common.domain.entity.Invertebrate">
+        UPDATE invertebrate
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="fishClass != null">fishClass = #{fishClass},</if>
+            <if test="order != null">`order` = #{order},</if>
+            <if test="family != null">family = #{family},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="imageUrl != null">image_url = #{imageUrl},</if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteInvertebrate">
+        DELETE FROM invertebrate WHERE id = #{id}
+    </delete>
+
+    <!-- 管理后台分页查询无脊椎动物 -->
+    <select id="selectPage" resultType="com.library.common.domain.entity.Invertebrate">
+        SELECT * FROM invertebrate
+        <where>
+            <if test="name != null and name != ''">
+                AND name LIKE CONCAT('%', #{name}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+    <!-- 查询全部无脊椎动物 -->
+    <select id="selectAll" resultType="com.library.common.domain.entity.Invertebrate">
+        SELECT * FROM invertebrate
+        ORDER BY id DESC
+    </select>
+</mapper>

@@ -1,0 +1,97 @@
+server:
+  port: 8080
+
+spring:
+  # 文件上传大小限制（视频文件较大）
+  servlet:
+    multipart:
+      max-file-size: 2GB
+      max-request-size: 2GB
+  datasource:
+    url: jdbc:mysql://127.0.0.1:3306/oceanweb?useUnicode=true&characterEncoding=utf8&serverTimezone=Asia/Shanghai
+    username: root
+    password: YOUR_MYSQL_PASSWORD
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  mvc:
+    view:
+      prefix:  /WEB-INF/jsp/
+      suffix:  .jsp
+    pathmatch:
+      matching-strategy: ant_path_matcher
+  # MongoDB 配置（聊天历史记录持久化）
+  data:
+    mongodb:
+      uri: mongodb://127.0.0.1:27017/OceanWeb
+
+# SpringDoc OpenAPI 配置（使用默认端点，由 Knife4j 自动装配）
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    enabled: true
+  packages-to-scan: com.library.controller
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.library.common.domain.entity
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    map-underscore-to-camel-case: true
+
+jwt:
+  secret: YOUR_JWT_SECRET_KEY_AT_LEAST_32_CHARS
+  expiration: 8640000000  # ms 100天
+
+
+
+ai:
+  deepseek:
+    api-key: "YOUR_DEEPSEEK_API_KEY"
+
+ai4j:
+  deepseek:
+    api-key: "YOUR_DEEPSEEK_API_KEY"
+
+# 通义千问 VL 视觉大模型配置（DashScope OpenAI 兼容接口）
+dashscope:
+  api-key: "YOUR_DASHSCOPE_API_KEY"
+  model: "qwen-vl-max"
+  base-url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+
+# 阿里云 OSS 配置
+aliyun:
+  oss:
+    endpoint: oss-cn-guangzhou.aliyuncs.com
+    access-key-id: YOUR_OSS_ACCESS_KEY_ID
+    access-key-secret: YOUR_OSS_ACCESS_KEY_SECRET
+    bucket-name: YOUR_BUCKET_NAME
+  vod:
+    access-key-id: YOUR_VOD_ACCESS_KEY_ID
+    access-key-secret: YOUR_VOD_ACCESS_KEY_SECRET
+    region: cn-shenzhen
+    storage-location: YOUR_STORAGE_LOCATION
+  # 阿里云短信服务配置（用户注册验证码）
+  sms:
+    access-key-id: YOUR_SMS_ACCESS_KEY_ID
+    access-key-secret: YOUR_SMS_ACCESS_KEY_SECRET
+    sign-name: YOUR_SIGN_NAME
+    template-code: YOUR_TEMPLATE_CODE
+    # 验证码有效期（分钟）
+    expire-minutes: 5
+    # 发送间隔限制（秒）
+    interval-seconds: 60
+# Knife4j 配置
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+
+# MinIO 对象存储配置（聊天图片持久化）
+minio:
+  endpoint: localhost:9000
+  access-key: minioadmin
+  secret-key: YOUR_MINIO_SECRET
+  bucket-name: knowledge-base-files
+  img-dir: /upload-images
+  secure: false
